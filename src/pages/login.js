@@ -1,12 +1,10 @@
-import { Button, Container, Input, Text, CountryCodes } from "../components";
-import { FaEnvelope, FaLock, FaPhoneAlt } from "react-icons/fa";
+import { Button, Container, Input, Text } from "../components";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 import {
   getAuth,
-  RecaptchaVerifier,
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
-  signInWithPhoneNumber,
 } from "firebase/auth";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { styled } from "../stitches.config";
@@ -21,11 +19,6 @@ export const Login = () => {
     otp: "",
   });
   const [formFields, setFormFields] = useState({ email: "", password: "" });
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [otp, setOtp] = useState("");
-  const [showOtp, setShowOtp] = useState(false);
-  const [countryCode, setCountryCode] = useState("233");
-  const [showNumberForm, setShowNumberForm] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
   const navigate = useNavigate();
@@ -45,7 +38,6 @@ export const Login = () => {
   };
 
   const googleLogin = () => {
-    const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
     signInWithPopup(auth, provider)
@@ -138,29 +130,6 @@ export const Login = () => {
     }
   };
 
-  const handleCodeSelect = (code) => {
-    setCountryCode(code);
-  };
-
-  const confirmOtp = (e) => {
-    let code = e.target.value;
-    setOtp(code);
-
-    if (code.length === 6) {
-      let confirmationResult = window.confirmationResult;
-      confirmationResult
-        .confirm(code)
-        .then((result) => {
-          const user = result.user;
-          console.log({ user });
-        })
-        .catch((error) => {
-          alert("Sign in unsuccessful. Try again");
-          console.log({ error });
-        });
-    }
-  };
-
   return redirect ? (
     <Navigate to="/dashboard" />
   ) : (
@@ -180,80 +149,49 @@ export const Login = () => {
         </FormHeader>
 
         <FormBody>
-          {showNumberForm ? (
-            <>
-              <InputGroup>
-                <InputLabel htmlFor="phoneNumber">
-                  <FaPhoneAlt size={15} />
-                  <Text>Phone Number</Text>
-                </InputLabel>
-                <NumberGrid>
-                  <CountryCodes handleCodeSelect={handleCodeSelect} />
+          <>
+            <InputGroup>
+              <InputLabel htmlFor="email">
+                <FaEnvelope size={15} />
+                <Text>Email</Text>
+              </InputLabel>
+              <Input
+                type="email"
+                id="email"
+                required
+                value={formFields.email}
+                onChange={(e) =>
+                  setFormFields({ ...formFields, email: e.target.value })
+                }
+              />
+              {formErrors.email && (
+                <Text size={1} color="danger">
+                  {formErrors.email}
+                </Text>
+              )}
+            </InputGroup>
 
-                  <Input
-                    type="number"
-                    id="phoneNumber"
-                    minLength={4}
-                    maxLength={12}
-                    required
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                  {formErrors.email && (
-                    <Text size={1} color="danger">
-                      {formErrors.email}
-                    </Text>
-                  )}
-                </NumberGrid>
-              </InputGroup>
-
-              <Button onClick={confirmOtp}>Login</Button>
-            </>
-          ) : (
-            <>
-              <InputGroup>
-                <InputLabel htmlFor="email">
-                  <FaEnvelope size={15} />
-                  <Text>Email</Text>
-                </InputLabel>
-                <Input
-                  type="email"
-                  id="email"
-                  required
-                  value={formFields.email}
-                  onChange={(e) =>
-                    setFormFields({ ...formFields, email: e.target.value })
-                  }
-                />
-                {formErrors.email && (
-                  <Text size={1} color="danger">
-                    {formErrors.email}
-                  </Text>
-                )}
-              </InputGroup>
-
-              <InputGroup>
-                <InputLabel htmlFor="password">
-                  <FaLock size={15} />
-                  <Text>Password</Text>
-                </InputLabel>
-                <Input
-                  type="password"
-                  required
-                  id="password"
-                  value={formFields.password}
-                  onChange={(e) =>
-                    setFormFields({ ...formFields, password: e.target.value })
-                  }
-                />
-                {formErrors.password && (
-                  <Text size={1} color="danger">
-                    {formErrors.password}
-                  </Text>
-                )}
-              </InputGroup>
-            </>
-          )}
+            <InputGroup>
+              <InputLabel htmlFor="password">
+                <FaLock size={15} />
+                <Text>Password</Text>
+              </InputLabel>
+              <Input
+                type="password"
+                required
+                id="password"
+                value={formFields.password}
+                onChange={(e) =>
+                  setFormFields({ ...formFields, password: e.target.value })
+                }
+              />
+              {formErrors.password && (
+                <Text size={1} color="danger">
+                  {formErrors.password}
+                </Text>
+              )}
+            </InputGroup>
+          </>
 
           <Button>Login</Button>
 
@@ -336,11 +274,4 @@ const StyledLink = styled(Link, {
 
 const SubForm = styled("div", {
   textAlign: "center",
-});
-
-const NumberGrid = styled("div", {
-  display: "grid",
-  maxWidth: "fit-content",
-  gap: 16,
-  gridTemplateColumns: "2fr 3fr",
 });

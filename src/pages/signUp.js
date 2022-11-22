@@ -1,10 +1,6 @@
 import { Button, Container, Input, Text } from "../components";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { styled } from "../stitches.config";
 import { useEffect, useState } from "react";
@@ -37,46 +33,6 @@ export const SignUp = () => {
   }, [getUser]);
   const ValidateForm = () => {
     return true;
-  };
-
-  const googleLogin = () => {
-    const provider = new GoogleAuthProvider();
-
-    signInWithPopup(auth, provider)
-      .then((response) => {
-        setSession({ user: response.user });
-
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        if (error.code === "auth/network-request-failed") {
-          alert("Registration unsuccessful. Try again");
-        }
-
-        if (error.code === "auth/user-not-found") {
-          setFormErrors((e) => ({
-            ...e,
-            password: "",
-          }));
-        } else {
-          setFormErrors((e) => ({
-            ...e,
-            email: "No account exists for this email",
-          }));
-        }
-
-        if (error.code === "auth/invalid-email") {
-          setFormErrors((e) => ({
-            ...e,
-            email: "Invalid email",
-          }));
-        } else {
-          setFormErrors((e) => ({
-            ...e,
-            email: "",
-          }));
-        }
-      });
   };
 
   const handleSubmit = (e) => {
