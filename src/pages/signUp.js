@@ -1,54 +1,58 @@
-import { Button, Container, Input, Text } from "../../components";
+import { Button, Container, Input, Text } from "../components";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import {
-  getAuth,
-  signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { styled } from "../../stitches.config";
+import { styled } from "../stitches.config";
 import { useEffect, useState } from "react";
-import { app } from "../../firebase";
+import { auth } from "../firebase";
+import { useSession } from "../hooks/useSession";
 
-export const Login = () => {
-  const [formErrors, setFormErrors] = useState({ email: "", password: "" });
-  const [formFields, setFormFields] = useState({ email: "", password: "" });
+export const SignUp = () => {
+  const [formErrors, setFormErrors] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [formFields, setFormFields] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [redirect, setRedirect] = useState(false);
 
+  const { getUser, setSession } = useSession();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const session = JSON.parse(localStorage.getItem("session"));
-
-    if (session) {
-      if (session.user !== null) {
-        setRedirect(true);
-      } else {
-        setRedirect(false);
-      }
+    const user = getUser();
+    if (user !== null) {
+      // setRedirect(true);
     } else {
       setRedirect(false);
     }
-  }, []);
-
+  }, [getUser]);
   const ValidateForm = () => {
     return true;
   };
 
   const googleLogin = () => {
-    const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
     signInWithPopup(auth, provider)
       .then((response) => {
-        localStorage.setItem(
-          "session",
-          JSON.stringify({ user: response.user })
-        );
+        setSession({ user: response.user });
+
         navigate("/dashboard");
       })
       .catch((error) => {
+        if (error.code === "auth/network-request-failed") {
+          alert("Registration unsuccessful. Try again");
+        }
+
         if (error.code === "auth/user-not-found") {
           setFormErrors((e) => ({
             ...e,
@@ -78,22 +82,26 @@ export const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (ValidateForm) {
-      const auth = getAuth(app);
-      signInWithEmailAndPassword(auth, formFields.email, formFields.password)
+      createUserWithEmailAndPassword(
+        auth,
+        formFields.email,
+        formFields.password
+      )
         .then((response) => {
-          localStorage.setItem(
-            "session",
-            JSON.stringify({ user: response.user })
-          );
-          setFormFields({ email: "", password: "" });
-
+          setSession({ user: response.user });
+          console.log(response.user);
+          setFormFields({ email: "", password: "", confirmPassword: "" });
           navigate("/dashboard");
         })
         .catch((error) => {
-          if (error.code === "auth/invalid-email") {
+          if (error.code === "auth/network-request-failed") {
+            alert("Registration unsuccessful. Try again");
+          }
+
+          if (error.code === "auth/weak-password") {
             setFormErrors((e) => ({
               ...e,
-              email: "Invalid email" + formFields.email,
+              email: "Weak pasword",
             }));
           } else {
             setFormErrors((e) => ({
@@ -101,10 +109,11 @@ export const Login = () => {
               email: "",
             }));
           }
-          if (error.code === "auth/user-not-found") {
+
+          if (error.code === "auth/email-already-in-use") {
             setFormErrors((e) => ({
               ...e,
-              email: "No account exists for this email",
+              email: "An account already exists for this email",
             }));
           } else {
             setFormErrors((e) => ({
@@ -145,9 +154,9 @@ export const Login = () => {
         }}
       >
         <FormHeader>
-          <FormTitle>Login to X-Tracker</FormTitle>
+          <FormTitle>Create an account</FormTitle>
           <Text size={1} css={{ maxWidth: 300, margin: "auto" }}>
-            We're glad to have you back. Login with your email and password
+            Register for a free X-Tracker account
           </Text>
         </FormHeader>
 
@@ -160,10 +169,11 @@ export const Login = () => {
             <Input
               type="email"
               id="email"
-              // required
+              required
               onChange={(e) =>
                 setFormFields({ ...formFields, email: e.target.value })
               }
+              placeholder="example@email.com"
             />
             {formErrors.email && (
               <Text size={1} color="danger">
@@ -179,11 +189,12 @@ export const Login = () => {
             </InputLabel>
             <Input
               type="password"
-              // required
+              required
               id="password"
               onChange={(e) =>
                 setFormFields({ ...formFields, password: e.target.value })
               }
+              placeholder="Enter a strong password"
             />
             {formErrors.password && (
               <Text size={1} color="danger">
@@ -191,11 +202,34 @@ export const Login = () => {
               </Text>
             )}
           </InputGroup>
+          <InputGroup>
+            <InputLabel htmlFor="confirmPassword">
+              <FaLock size={20} />
+              <Text>Confirm Password</Text>
+            </InputLabel>
+            <Input
+              type="password"
+              required
+              id="confirmPassword"
+              onChange={(e) =>
+                setFormFields({
+                  ...formFields,
+                  confirmPassword: e.target.value,
+                })
+              }
+              placeholder="Confirm password"
+            />
+            {formErrors.confirmPassword && (
+              <Text size={1} color="danger">
+                {formErrors.confirmPassword}
+              </Text>
+            )}
+          </InputGroup>
 
-          <Button>Login</Button>
+          <Button>Sign up</Button>
 
           <SubForm>
-            <Text
+            {/* <Text
               css={{
                 maxWidth: 300,
                 margin: "auto",
@@ -205,11 +239,11 @@ export const Login = () => {
               onClick={googleLogin}
             >
               Sign in with Google
-            </Text>
+            </Text> */}
 
-            <Text css={{ maxWidth: 300, margin: "auto" }}>
-              Don't have account?{" "}
-              <StyledLink to="/dashboard">Sign up</StyledLink>
+            <Text>
+              Already have an account?{" "}
+              <StyledLink to="/login">Login</StyledLink>
             </Text>
           </SubForm>
         </FormBody>

@@ -18,7 +18,7 @@ export const Home = () => {
       <h1>Dashboard</h1>
       <br />
 
-      {user && <Text>{user.email} is logged in!</Text>}
+      {user && <Text>{user?.displayName || user.email} is logged in!</Text>}
       <br />
 
       <Text>
@@ -41,6 +41,8 @@ export const Home = () => {
 
       <br />
       <Button onClick={logout}>Logout</Button>
+      <br />
+      <br />
     </Container>
   );
 };
