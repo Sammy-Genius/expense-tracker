@@ -31,13 +31,26 @@ export const SignUp = () => {
       setRedirect(false);
     }
   }, [getUser]);
+
   const ValidateForm = () => {
-    return true;
+    if (formFields.password !== formFields.confirmPassword) {
+      setFormErrors({
+        ...formErrors,
+        confirmPassword: "Passwords do not match",
+      });
+      return false;
+    } else {
+      setFormErrors({
+        ...formErrors,
+        confirmPassword: "",
+      });
+      return true;
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (ValidateForm) {
+    if (ValidateForm()) {
       createUserWithEmailAndPassword(
         auth,
         formFields.email,
@@ -57,12 +70,12 @@ export const SignUp = () => {
           if (error.code === "auth/weak-password") {
             setFormErrors((e) => ({
               ...e,
-              email: "Weak pasword",
+              password: "Weak password",
             }));
           } else {
             setFormErrors((e) => ({
               ...e,
-              email: "",
+              password: "",
             }));
           }
 
@@ -78,23 +91,9 @@ export const SignUp = () => {
             }));
           }
 
-          if (error.code === "auth/wrong-password") {
-            setFormErrors((e) => ({
-              ...e,
-              password: "Wrong password",
-            }));
-          } else {
-            setFormErrors((e) => ({
-              ...e,
-              password: "",
-            }));
-          }
-
           console.log({ error });
           console.log({ code: error.code, message: error.message });
         });
-    } else {
-      alert("Check your details and sign in again");
     }
   };
 
