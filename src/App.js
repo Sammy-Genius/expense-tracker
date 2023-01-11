@@ -6,16 +6,13 @@ function App() {
   return (
     <div className="App">
       <Container size="xl">
-        <h1>Landing page</h1>
+        <h1>MONITOR YOUR FINANCES WITH X-TRACKER</h1>
         <br />
-        <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas fugiat
-          nesciunt itaque, corrupti deleniti asperiores a sapiente nobis quidem
-          quo quos delectus debitis aperiam ipsum, architecto quasi facilis.
-          Molestiae, accusantium!
+        <p className="landing-page-text">
+          Hello, welcome to X-Tracker. Do you wish to know what you daily spend your money on? Would you love to have a fair idea of your daily expenses? Do you want to be a better manager of your finances? Then X-Tracker is for you. We help you become a better manager of your finances by tracking your daily expenses. Click on the button below to login or create an account.
         </p>
         <br />
-        <Button onClick={() => navigate("/login")}>Login</Button>
+        <Button onClick={() => navigate("/login")}>Proceed</Button>
       </Container>
     </div>
   );

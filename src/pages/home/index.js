@@ -1,6 +1,14 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Container, Text } from "../../components";
+import AddExpenses from "../../components/AddExpenses";
+import Budget from "../../components/Budget";
+import BudgetModal from "../../components/budgetModal";
+import MomoModal from "../../components/MomoModal";
+import Remaining from "../../components/Remaining";
+import TotalExpenses from "../../components/TotalExpenses";
 import { useSession } from "../../hooks/useSession";
+
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -13,32 +21,79 @@ export const Home = () => {
     navigate("/login");
   };
 
+
+  const [budget, setBudget] = useState(0);
+  const [momoModal, setMomoModal] = useState(false);
+  const [budgetModal, setBudgetModal] = useState(false);
+  const [expenseList, setExpenseList] = useState([]);
+  const [itemSpentOn, setItemSpentOn] = useState('');
+  const [cost, setCost] = useState('');
+
+  const openBudgetModal = () => {
+    setBudgetModal(!budgetModal);
+  }
+
+  const openMomoModal = () => {
+    setMomoModal(!momoModal);
+  }
+
+  const addExpenses = () => {
+    setExpenseList([...expenseList, {itemSpentOn: itemSpentOn, cost: Number(cost), id: expenseList.length}]);
+    setItemSpentOn('');
+    setCost('');
+  }
+
+  const deleteExpenses = (id) => {
+    const updatedExpenses = expenseList.filter(expenses => expenses.id !== id);
+    setExpenseList(updatedExpenses);
+  }
+
   return (
     <Container size="md">
-      <h1>Dashboard</h1>
+      <h1>DASHBOARD</h1>
       <br />
 
-      {user && <Text>{user?.displayName || user.email} is logged in!</Text>}
+      {user && <Text>Welcome, {user?.displayName || user.email}</Text>}
       <br />
 
-      <Text>
-        Repudiandae unde vel laboriosam molestias dignissimos velit debitis at
-        possimus. Consequuntur nobis facere quod quia tempora nostrum rerum
-        soluta aperiam repudiandae aliquid officiis quas dolorum iste, nulla
-        repellendus unde at, corrupti pariatur accusamus error iusto a quis.
-        nihil aperiam dignissimos modi vitae beatae impedit illum? Inventore
-        excepturi iusto enim iure, similique perspiciatis accusamus beatae.
-      </Text>
-      <br />
-
-      <Text>
-        Voluptate sapiente sint, quidem ut minus quod omnis? Officia debitis
-        placeat quisquam expedita sed porro facere, iste magnam error est
-        commodi consequatur neque, ad, et dolor velit voluptatem hic. Unde
-        quidem dicta voluptatum ad sint quae laudantium minus dolor illum quasi
-        excepturi iusto enim iure, similique perspiciatis accusamus beatae.
-      </Text>
-
+      <div className="container">
+        <div className="wrapper">
+          <div className="outcome-box">
+            <Budget budget = { budget }/>
+            <TotalExpenses expenseList = { expenseList } />
+            <Remaining expenseList = { expenseList } budget = {budget}/>
+          </div>
+          <div className="buttons-box">
+            <button onClick={ openBudgetModal }>Set Budget</button>
+            <button onClick={ openMomoModal }>Add Mobile Money Wallet</button>
+          </div>
+        </div>
+        <div className="wrapper-two">
+          <h2>EXPENSES</h2>
+          <div className="expenseContainer">
+            {expenseList.map((expenses) => {
+              return <div className="expenseList"> 
+                <p>{expenses.itemSpentOn}</p>
+                <div className="area-box">
+                  <p>GHS {Number(expenses.cost).toFixed(2)}</p>
+                  <span onClick={() => deleteExpenses(expenses.id)}>&times;</span>
+                </div>
+              </div>
+            })}
+          </div>
+        </div>
+        <div className="wrapper-three">
+          <AddExpenses 
+          addExpenses = { addExpenses } 
+          setItemSpentOn = {setItemSpentOn} 
+          setCost = {setCost} 
+          cost = { cost }
+          itemSpentOn = { itemSpentOn } />
+        </div>
+        <BudgetModal budgetModal = {budgetModal} openBudgetModal = { openBudgetModal } setBudget = {setBudget } />
+        <MomoModal momoModal = { momoModal } openMomoModal = { openMomoModal } setBudget = {setBudget } />
+      </div>
+      
       <br />
       <Button onClick={logout}>Logout</Button>
       <br />

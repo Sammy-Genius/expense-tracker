@@ -16,6 +16,9 @@ body {
   background-color: #030f41;
   color: white;
   letter-spacing: 1px;
+  width:100vw;
+  height:100vh;
+  position:relative;
 }
 
 h1,
@@ -23,4 +26,290 @@ h2,
 h3,
 h4 {
   font-weight: 500;
+}
+
+.container {
+  margin-top:30px;
+  width: 100%;
+}
+
+.container .wrapper {
+  width:100%;
+  display:flex;
+  flex-direction: column;
+}
+
+.container .outcome-box {
+  width:100%;
+  display:flex;
+  justify-content: space-between;
+}
+
+.buttons-box {
+  width:100%;
+  margin-top:30px;
+}
+
+button {
+  border:0;
+  outline:none;
+  background: none;
+  border:2px solid lightgreen;
+  padding:15px 20px;
+  margin-right:20px;
+  border-radius:10px;
+  color:white;
+  cursor: pointer;
+  font-weight:bold;
+}
+
+button:hover {
+  background-color: lightgreen;
+  color:green;
+  font-weight:bold;
+
+}
+
+.box {
+  width:300px;
+  height:80px;
+  background-color: white;
+  border-radius:10px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box:nth-child(1), .box:nth-child(2) {
+  margin-right:15px;
+}
+
+.box:nth-child(2) {
+  background-color: palevioletred;
+}
+
+
+.green {
+  width:300px;
+  height:80px;
+  border-radius:10px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgreen;
+}
+
+.green p {
+  color:green;
+  font-weight: bold;
+}
+
+.red {
+  width:300px;
+  height:80px;
+  border-radius:10px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color: crimson;
+}
+
+.box:nth-child(1) p {
+  color:black;
+}
+
+.box:nth-child(3) p {
+  color: green;
+}
+
+.container .wrapper-two, .container .wrapper-three {
+  width:100%;
+  margin-top:60px;
+}
+
+.wrapper-two .expenseContainer {
+  width:100%;
+  margin-top:30px;
+}
+
+.wrapper-three {
+  width:100%;
+  height:300px;
+}
+
+
+.addExpense {
+  margin-top:30px;
+}
+
+.modal-overlay {
+  width:100%;
+  height:100%;
+  background-color: rgba(0,0,0,0.85);
+  position: fixed;
+  top:0;
+  left:0;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay .m-box {
+    width:40%;
+    height:60%;
+    background-color: white;
+    border-radius:20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.m-box h2 {
+  color:black;
+  margin-top:20px;
+}
+
+
+.input {
+  margin:30px auto;
+  width:260px;
+  height:60px;
+  border-bottom:2px solid gray;
+}
+
+.input-two {
+  margin:0 auto;
+}
+
+input[type='text'] {
+  width:100%;
+  height:100%;
+  border:0;
+  outline:none;
+  background: none;
+  padding:0 10px;
+}
+
+.m-box .add-box {
+  width:100%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-budget-btn, .add-momo-btn{
+  margin-top:60px;
+  background-color: lightgreen;
+  color:green;
+  cursor: pointer;
+}
+
+.add-budget-btn:hover {
+  background-color: lightgreen;
+  color:green;
+}
+
+.close-bm {
+  position: absolute;
+  top:3%;
+  right:5%;
+  color:crimson;
+  font-size:2rem;
+  cursor:pointer;
+}
+
+.momo-box {
+  width:100%;
+  display:flex;
+  justify-content: center;
+}
+
+.add-momo-btn {
+  margin-top:40px;
+}
+
+.box p {
+  font-weight:bold;
+}
+
+.input-three {
+  width:350px;
+  height:60px;
+  border-bottom:2px solid lightgreen;
+}
+
+.itemText {
+  color:white;
+}
+
+.addExpense div:nth-child(2) {
+  margin-top:30px;
+}
+
+.addExpense button {
+  margin:30px 0;
+  font-weight: bold;
+}
+
+.expenseList {
+  width:80%;
+  padding:15px 30px;
+  border:2px solid lightgreen;
+  display:flex;
+  justify-content: space-between;
+  margin-bottom:30px;
+  border-radius:30px;
+}
+
+.expenseList p::first-letter {
+  text-transform: uppercase;
+}
+
+.area-box {
+  width:25%;
+  height:100%;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.area-box span {
+  color:crimson;
+  cursor:pointer;
+  font-size: 1.5rem;
+}
+
+.img-box {
+  margin:20px 0;
+  width:60%;
+  display:flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.img-box img {
+  width:60px;
+  height:50px;
+  background-repeat: no-repeat;
+}
+
+.top-space {
+  margin-top:0px;
+}
+
+.landing-page-text {
+  display:block;
+  width:60%;
+  line-height: 30px;
+  margin-top:30px;
+}
+
+.success-bg {
+  position: absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  background-color: red;
 }
