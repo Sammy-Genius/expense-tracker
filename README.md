@@ -1,6 +1,6 @@
 # X-Tracker
 
-An expense tracker application with a login system that generates an OTP code for authentication
+An expense tracker application with a login system for authentication
 
 ## To run
 
